@@ -90,3 +90,15 @@ export const LogoutIcon: React.FC = () => (
         <line x1="21" y1="12" x2="9" y2="12"></line>
     </svg>
 );
+
+export const StarIcon: React.FC = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+        <defs>
+            <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style={{stopColor: '#FF00EE', stopOpacity:1}} />
+                <stop offset="100%" style={{stopColor: '#00FFFF', stopOpacity:1}} />
+            </linearGradient>
+        </defs>
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="url(#starGradient)" stroke="url(#starGradient)"></path>
+    </svg>
+);

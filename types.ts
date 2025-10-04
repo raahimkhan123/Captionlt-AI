@@ -1,4 +1,3 @@
-
 export enum Screen {
   Home = 'Home',
   History = 'History',
@@ -12,7 +11,7 @@ export interface GeminiResponse {
 }
 
 export interface CaptionResult extends GeminiResponse {
-  historyId: string;
+  historyId?: string; // Will be assigned by Firestore upon saving
   inputDetails: {
     topic: string;
     tone: string;
@@ -21,6 +20,7 @@ export interface CaptionResult extends GeminiResponse {
 }
 
 export interface User {
+    uid: string;
     name: string;
     email: string;
     avatar: string;

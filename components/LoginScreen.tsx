@@ -1,34 +1,85 @@
 import React, { useState } from 'react';
+import { 
+    signInWithPopup,
+    GoogleAuthProvider,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    updateProfile
+} from 'firebase/auth';
+import { auth } from '../services/firebase';
+import * as firestoreService from '../services/firestoreService';
 import { GoogleIcon } from './icons/BrandIcons';
 import { SparklesIcon } from './icons/ActionIcons';
 
 interface LoginScreenProps {
-    onLogin: () => void;
-    onGuest: () => void;
     showToast: (message: string) => void;
 }
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onGuest, showToast }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ showToast }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isSignUp, setIsSignUp] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    
+    const firebaseNotConfiguredError = "Authentication is currently unavailable. Please check the application configuration.";
 
-    const handleSignIn = (e: React.FormEvent) => {
+    const handleAuthAction = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
+        
+        if (!auth) {
+            setError(firebaseNotConfiguredError);
+            return;
+        }
 
         if (!email || !password) {
             setError("Email and password are required.");
             return;
         }
-
-        // Simulate a successful login with specific credentials
-        if (email === 'alex.j@example.com' && password === 'password123') {
-            onLogin();
-        } else {
-            setError("Invalid credentials. Please try again.");
+        
+        setLoading(true);
+        try {
+            if (isSignUp) {
+                // Sign Up
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const name = email.split('@')[0]; // Simple name generation
+                await updateProfile(userCredential.user, { 
+                    displayName: name,
+                    photoURL: `https://i.pravatar.cc/150?u=${userCredential.user.uid}`
+                });
+                await firestoreService.createUserProfile(userCredential.user);
+                showToast("Account created successfully!");
+            } else {
+                // Sign In
+                await signInWithEmailAndPassword(auth, email, password);
+            }
+        } catch (authError: any) {
+            setError(authError.message.replace('Firebase: ', ''));
+        } finally {
+            setLoading(false);
         }
     };
+    
+    const handleGoogleSignIn = async () => {
+        if (!auth) {
+            setError(firebaseNotConfiguredError);
+            return;
+        }
+
+        const provider = new GoogleAuthProvider();
+        try {
+            const result = await signInWithPopup(auth, provider);
+            // Check if user is new to create a profile
+            const profile = await firestoreService.getUserProfile(result.user.uid);
+            if (!profile) {
+                 await firestoreService.createUserProfile(result.user);
+                 showToast("Welcome to Captionly AI!");
+            }
+        } catch (authError: any) {
+             setError(authError.message.replace('Firebase: ', ''));
+        }
+    }
 
     const handleForgotPassword = () => {
         showToast("Password reset feature is coming soon!");
@@ -45,7 +96,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onGuest, showToast }
                     <p className="text-gray-400 mt-2">Your AI-powered social media assistant.</p>
                 </header>
 
-                <form onSubmit={handleSignIn} className="space-y-4">
+                <form onSubmit={handleAuthAction} className="space-y-4">
                     <div className="bg-white/5 border border-white/10 rounded-2xl backdrop-blur-lg hover:bg-white/10 transition-colors">
                          <input
                             type="email"
@@ -75,13 +126,21 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onGuest, showToast }
                     
                     <button
                         type="submit"
-                        className="w-full font-bold py-3 px-6 rounded-2xl bg-gradient-to-r from-[#FF00EE] to-[#F0B3FF] text-white transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-[#FF00EE]/30 active:scale-95"
+                        disabled={loading || !auth}
+                        className="w-full font-bold py-3 px-6 rounded-2xl bg-gradient-to-r from-[#FF00EE] to-[#F0B3FF] text-white transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-[#FF00EE]/30 active:scale-95 disabled:opacity-50"
                     >
-                        Sign In
+                        {loading ? 'Processing...' : (isSignUp ? 'Create Account' : 'Sign In')}
                     </button>
                 </form>
 
-                <div className="text-right mt-2">
+                <div className="flex justify-between items-center mt-2 px-1">
+                     <button
+                        type="button"
+                        onClick={() => setIsSignUp(!isSignUp)}
+                        className="text-sm text-gray-400 hover:text-white transition-colors"
+                    >
+                        {isSignUp ? "Have an account? Sign In" : "Need an account? Sign Up"}
+                    </button>
                     <button
                         type="button"
                         onClick={handleForgotPassword}
@@ -91,27 +150,20 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onGuest, showToast }
                     </button>
                 </div>
 
-
                 <div className="flex items-center my-6">
                     <hr className="flex-grow border-white/10" />
                     <span className="px-4 text-gray-400 text-sm">OR</span>
                     <hr className="flex-grow border-white/10" />
                 </div>
 
-
                 <div className="space-y-4">
                     <button
-                        onClick={onLogin}
-                        className="w-full flex items-center justify-center gap-3 font-semibold py-3 px-6 rounded-2xl bg-white text-black transition-all duration-300 ease-in-out hover:bg-gray-200 active:scale-95"
+                        onClick={handleGoogleSignIn}
+                        disabled={!auth}
+                        className="w-full flex items-center justify-center gap-3 font-semibold py-3 px-6 rounded-2xl bg-white text-black transition-all duration-300 ease-in-out hover:bg-gray-200 active:scale-95 disabled:opacity-50"
                     >
                         <GoogleIcon />
-                        Sign in with Google
-                    </button>
-                    <button
-                        onClick={onGuest}
-                        className="w-full font-semibold py-3 px-6 rounded-2xl text-white bg-white/10 hover:bg-white/20 active:bg-white/5 active:scale-95 transition-all"
-                    >
-                        Continue as Guest
+                        Continue with Google
                     </button>
                 </div>
                 <p className="text-xs text-gray-500 mt-8">

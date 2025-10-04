@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { CheckIcon } from './icons/ActionIcons';
+import { CheckIcon, StarIcon } from './icons/ActionIcons';
 
 interface PricingScreenProps {
     onSignUp: () => void;
@@ -53,20 +52,20 @@ const PricingScreen: React.FC<PricingScreenProps> = ({ onSignUp, isGuest, showTo
             </div>
 
             {/* Pricing Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-6 px-2">
+            <div className="flex flex-col items-center gap-8 px-2">
                 {/* Free Plan */}
-                <div className="bg-white/5 border border-white/10 rounded-3xl p-6 flex flex-col">
+                <div className="bg-white/5 border border-white/10 rounded-3xl p-6 flex flex-col w-full max-w-sm animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                     <h3 className="text-xl font-semibold">Starter</h3>
                     <p className="text-gray-400 mt-1">For casual users and trying out the platform.</p>
                     <p className="my-6">
-                        <span className="text-4xl font-bold">$0</span>
+                        <span className="text-5xl font-bold">$0</span>
                         <span className="text-gray-400">/ month</span>
                     </p>
                     <ul className="space-y-3 text-gray-300 flex-grow">
-                        <li className="flex items-center gap-3"><CheckIcon /> 5 Generations / day</li>
-                        <li className="flex items-center gap-3"><CheckIcon /> Access to standard tones</li>
-                        <li className="flex items-center gap-3"><CheckIcon /> All social media platforms</li>
-                        <li className="flex items-center gap-3"><CheckIcon /> Save generation history</li>
+                        <li className="flex items-center gap-3"><CheckIcon /> 5 AI Generations per Day</li>
+                        <li className="flex items-center gap-3"><CheckIcon /> Access to Standard Tones</li>
+                        <li className="flex items-center gap-3"><CheckIcon /> All Social Media Platforms</li>
+                        <li className="flex items-center gap-3"><CheckIcon /> Save & Review Past Generations</li>
                     </ul>
                     <button disabled className="w-full mt-8 font-bold py-3 px-6 rounded-2xl text-white bg-white/10 cursor-not-allowed">
                         Your Current Plan
@@ -74,22 +73,22 @@ const PricingScreen: React.FC<PricingScreenProps> = ({ onSignUp, isGuest, showTo
                 </div>
                 
                 {/* Pro Plan - Most Popular */}
-                <div className="relative bg-white/5 border-2 border-[#FF00EE] rounded-3xl p-6 flex flex-col shadow-lg shadow-[#FF00EE]/20">
+                <div className="relative bg-white/5 border-2 border-[#FF00EE] rounded-3xl p-6 flex flex-col shadow-lg shadow-[#FF00EE]/20 w-full max-w-sm transform scale-105 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
                     <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#FF00EE] to-[#F0B3FF] text-white text-xs font-bold px-3 py-1 rounded-full">
                         MOST POPULAR
                     </div>
                     <h3 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#FF00EE] to-[#00FFFF]">Pro</h3>
                     <p className="text-gray-400 mt-1">For creators, marketers, and power users.</p>
                     <p className="my-6">
-                        <span className="text-4xl font-bold">{billingCycle === 'monthly' ? '$9' : '$7.20'}</span>
+                        <span className="text-5xl font-bold">{billingCycle === 'monthly' ? '$9' : '$7.20'}</span>
                         <span className="text-gray-400">/ month</span>
-                        {billingCycle === 'yearly' && <p className="text-sm text-gray-400">Billed as $86.40 per year</p>}
+                        {billingCycle === 'yearly' && <p className="text-sm text-gray-400 mt-1">Billed as $86.40 per year</p>}
                     </p>
                     <ul className="space-y-3 text-gray-300 flex-grow">
-                        <li className="flex items-center gap-3"><CheckIcon /> Unlimited Generations</li>
-                        <li className="flex items-center gap-3"><CheckIcon /> Access to all tones, including premium</li>
-                        <li className="flex items-center gap-3"><CheckIcon /> Advanced content analytics (soon)</li>
-                        <li className="flex items-center gap-3"><CheckIcon /> Priority email support</li>
+                        <li className="flex items-center gap-3"><StarIcon /> Unlimited AI Generations</li>
+                        <li className="flex items-center gap-3"><StarIcon /> Access to All 20+ Content Tones</li>
+                        <li className="flex items-center gap-3"><StarIcon /> Advanced Analytics & Insights (Soon)</li>
+                        <li className="flex items-center gap-3"><StarIcon /> Priority Customer Support</li>
                     </ul>
                     <button onClick={handleUpgrade} className="w-full mt-8 font-bold py-3 px-6 rounded-2xl bg-gradient-to-r from-[#FF00EE] to-[#F0B3FF] text-white transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-[#FF00EE]/30 active:scale-95">
                         {isGuest ? 'Sign Up to Upgrade' : 'Upgrade to Pro'}
@@ -97,17 +96,17 @@ const PricingScreen: React.FC<PricingScreenProps> = ({ onSignUp, isGuest, showTo
                 </div>
 
                 {/* Business Plan */}
-                <div className="bg-white/5 border border-white/10 rounded-3xl p-6 flex flex-col">
+                <div className="bg-white/5 border border-white/10 rounded-3xl p-6 flex flex-col w-full max-w-sm animate-fade-in-up" style={{ animationDelay: '300ms' }}>
                     <h3 className="text-xl font-semibold">Business</h3>
                     <p className="text-gray-400 mt-1">For agencies, teams, and enterprises.</p>
                     <p className="my-6">
-                        <span className="text-4xl font-bold">Let's Talk</span>
+                        <span className="text-5xl font-bold">Let's Talk</span>
                     </p>
                     <ul className="space-y-3 text-gray-300 flex-grow">
-                        <li className="flex items-center gap-3"><CheckIcon /> Everything in Pro, plus:</li>
-                        <li className="flex items-center gap-3"><CheckIcon /> Team collaboration features</li>
-                        <li className="flex items-center gap-3"><CheckIcon /> API Access for custom integrations</li>
-                        <li className="flex items-center gap-3"><CheckIcon /> Dedicated account manager</li>
+                        <li className="flex items-center gap-3"><StarIcon /> Everything in Pro, plus:</li>
+                        <li className="flex items-center gap-3"><StarIcon /> Multi-User & Team Collaboration</li>
+                        <li className="flex items-center gap-3"><StarIcon /> Full API Access for Custom Workflows</li>
+                        <li className="flex items-center gap-3"><StarIcon /> Dedicated Onboarding Manager</li>
                     </ul>
                     <button onClick={handleContactSales} className="w-full mt-8 font-bold py-3 px-6 rounded-2xl text-white bg-white/10 hover:bg-white/20 active:scale-95 transition-all">
                         Contact Sales

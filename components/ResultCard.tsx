@@ -19,7 +19,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, onSave, isSaved, onClea
   const displayedCaptions = result.captions.map(caption => useTypewriter(caption, 20));
   const displayedHashtags = useTypewriter(result.hashtags.join(' '), 30);
 
-  // Reset confetti trigger when a new result is generated
+  // Reset confetti trigger when a new result is generated (historyId will be undefined)
   useEffect(() => {
     setIsFirstCopy(true);
   }, [result.historyId]);

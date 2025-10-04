@@ -181,7 +181,7 @@ const GeneratorScreen: React.FC<GeneratorScreenProps> = ({ onSave, history, resu
                     <ResultCard
                       result={result}
                       onSave={onSave}
-                      isSaved={history.some(item => item.historyId === result.historyId)}
+                      isSaved={!!result.historyId && history.some(item => item.historyId === result.historyId)}
                       onClear={() => setResult(null)}
                     />
                 </div>

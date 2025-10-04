@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { GeminiResponse } from '../types';
 
@@ -26,7 +25,7 @@ const responseSchema = {
 };
 
 
-export const generateCaptions = async (topic: string, tone: string, platform: string): Promise<GeminiResponse & { historyId: string }> => {
+export const generateCaptions = async (topic: string, tone: string, platform: string): Promise<GeminiResponse> => {
     try {
         const prompt = `
             System: You are Captionly AI, an expert social media copywriter. Output valid JSON only, adhering to the provided schema.
@@ -63,13 +62,7 @@ export const generateCaptions = async (topic: string, tone: string, platform: st
             throw new Error('AI response is missing captions or hashtags.');
         }
 
-        // In a real app, this ID would come from the backend after saving to Firestore.
-        const historyId = `mock_${Date.now()}`;
-
-        return {
-            ...parsedResponse,
-            historyId,
-        };
+        return parsedResponse;
 
     } catch (error) {
         console.error("Error generating captions with Gemini:", error);
