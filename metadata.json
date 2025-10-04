@@ -1,0 +1,5 @@
+{
+  "name": "Captionly AI",
+  "description": "A mobile-first application designed to empower users with professional, AI-generated social media captions and hashtags. Users input a topic, select a tone, and choose a platform to receive unique captions and relevant hashtags.",
+  "requestFramePermissions": []
+}
